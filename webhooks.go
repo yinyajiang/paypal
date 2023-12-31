@@ -3,11 +3,12 @@ package paypal
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/yinyajiang/paypal/v4/json"
 )
 
 // CreateWebhook - Subscribes your webhook listener to events.

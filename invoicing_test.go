@@ -2,7 +2,7 @@ package paypal_test
 
 import (
 	"context"
-	"encoding/json"
+	"github.com/yinyajiang/paypal/v4/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

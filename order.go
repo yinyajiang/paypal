@@ -2,7 +2,7 @@ package paypal
 
 import (
 	"context"
-	"encoding/json"
+	"github.com/yinyajiang/paypal/v4/json"
 	"fmt"
 )
 

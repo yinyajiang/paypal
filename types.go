@@ -1,13 +1,14 @@
 package paypal
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/yinyajiang/paypal/v4/json"
 )
 
 const (

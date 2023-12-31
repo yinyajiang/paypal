@@ -3,13 +3,14 @@ package paypal
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"net/http/httputil"
 	"time"
+
+	"github.com/yinyajiang/paypal/v4/json"
 )
 
 // NewClient returns new Client struct
