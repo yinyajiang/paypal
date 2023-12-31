@@ -192,17 +192,23 @@ type (
 		Value    string `json:"value"`
 	}
 
+	StoredPaymentSource struct {
+		PaymentInitiator string `json:"payment_initiator"`
+		PaymentType      string `json:"payment_type"`
+	}
+
 	// ApplicationContext struct
 	//Doc: https://developer.paypal.com/docs/api/orders/v2/#definition-application_context
 	ApplicationContext struct {
-		BrandName          string             `json:"brand_name,omitempty"`
-		Locale             string             `json:"locale,omitempty"`
-		ShippingPreference ShippingPreference `json:"shipping_preference,omitempty"`
-		UserAction         UserAction         `json:"user_action,omitempty"`
-		PaymentMethod      PaymentMethod      `json:"payment_method,omitempty"`
-		LandingPage        string             `json:"landing_page,omitempty"`
-		ReturnURL          string             `json:"return_url,omitempty"`
-		CancelURL          string             `json:"cancel_url,omitempty"`
+		BrandName           string               `json:"brand_name,omitempty"`
+		Locale              string               `json:"locale,omitempty"`
+		ShippingPreference  ShippingPreference   `json:"shipping_preference,omitempty"`
+		UserAction          UserAction           `json:"user_action,omitempty"`
+		PaymentMethod       PaymentMethod        `json:"payment_method,omitempty"`
+		LandingPage         string               `json:"landing_page,omitempty"`
+		ReturnURL           string               `json:"return_url,omitempty"`
+		CancelURL           string               `json:"cancel_url,omitempty"`
+		StoredPaymentSource *StoredPaymentSource `json:"stored_payment_source,omitempty"`
 	}
 
 	// Invoicing relates structures
@@ -1152,8 +1158,8 @@ type (
 		CancelURL string `json:"cancel_url,omitempty"`
 	}
 
-	// Refund struct
-	Refund struct {
+	// RefundResponse struct
+	RefundResponse struct {
 		ID                     string                  `json:"id,omitempty"`
 		Amount                 *AmountSummaryDetail    `json:"amount,omitempty"`
 		Status                 string                  `json:"status"`
@@ -1164,8 +1170,8 @@ type (
 		Links                  []Link                  `json:"links"`
 	}
 
-	// RefundResponse .
-	RefundResponse struct {
+	// RefundCaptureResponse .
+	RefundCaptureResponse struct {
 		ID     string              `json:"id,omitempty"`
 		Amount *PurchaseUnitAmount `json:"amount,omitempty"`
 		Status string              `json:"status,omitempty"`
@@ -1174,11 +1180,11 @@ type (
 
 	// Related struct
 	Related struct {
-		Sale          *Sale          `json:"sale,omitempty"`
-		Authorization *Authorization `json:"authorization,omitempty"`
-		Order         *Order         `json:"order,omitempty"`
-		Capture       *Capture       `json:"capture,omitempty"`
-		Refund        *Refund        `json:"refund,omitempty"`
+		Sale          *Sale           `json:"sale,omitempty"`
+		Authorization *Authorization  `json:"authorization,omitempty"`
+		Order         *Order          `json:"order,omitempty"`
+		Capture       *Capture        `json:"capture,omitempty"`
+		Refund        *RefundResponse `json:"refund,omitempty"`
 	}
 
 	// Sale struct

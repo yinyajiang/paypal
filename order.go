@@ -2,8 +2,9 @@ package paypal
 
 import (
 	"context"
-	"github.com/yinyajiang/paypal/v4/json"
 	"fmt"
+
+	"github.com/yinyajiang/paypal/v4/json"
 )
 
 // GetOrder retrieves order by ID
@@ -152,7 +153,7 @@ func (c *Client) CaptureOrderWithPaypalRequestId(ctx context.Context,
 
 // RefundCapture - https://developer.paypal.com/docs/api/payments/v2/#captures_refund
 // Endpoint: POST /v2/payments/captures/ID/refund
-func (c *Client) RefundCapture(ctx context.Context, captureID string, refundCaptureRequest RefundCaptureRequest) (*RefundResponse, error) {
+func (c *Client) RefundCapture(ctx context.Context, captureID string, refundCaptureRequest RefundCaptureRequest) (*RefundCaptureResponse, error) {
 	return c.RefundCaptureWithPaypalRequestId(ctx, captureID, refundCaptureRequest, "")
 }
 
@@ -162,8 +163,8 @@ func (c *Client) RefundCaptureWithPaypalRequestId(ctx context.Context,
 	captureID string,
 	refundCaptureRequest RefundCaptureRequest,
 	requestID string,
-) (*RefundResponse, error) {
-	refund := &RefundResponse{}
+) (*RefundCaptureResponse, error) {
+	refund := &RefundCaptureResponse{}
 
 	req, err := c.NewRequest(ctx, "POST", fmt.Sprintf("%s%s", c.APIBase, "/v2/payments/captures/"+captureID+"/refund"), refundCaptureRequest)
 	if err != nil {

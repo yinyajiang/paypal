@@ -84,6 +84,21 @@ func (c *Client) DeleteWebhook(ctx context.Context, webhookID string) error {
 // VerifyWebhookSignature - Use this to verify the signature of a webhook recieved from paypal.
 // Endpoint: POST /v1/notifications/verify-webhook-signature
 func (c *Client) VerifyWebhookSignature(ctx context.Context, httpReq *http.Request, webhookID string) (*VerifyWebhookResponse, error) {
+	// Read the content
+	var bodyBytes []byte
+	if httpReq.Body != nil {
+		bodyBytes, _ = io.ReadAll(httpReq.Body)
+	} else {
+		return nil, errors.New("Cannot verify webhook for HTTP Request with empty body.")
+	}
+	// Restore the io.ReadCloser to its original state
+	httpReq.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+	return c.VerifyWebhookSignature2(ctx, bodyBytes, httpReq.Header, webhookID)
+}
+
+// VerifyWebhookSignature - Use this to verify the signature of a webhook recieved from paypal.
+// Endpoint: POST /v1/notifications/verify-webhook-signature
+func (c *Client) VerifyWebhookSignature2(ctx context.Context, bodyBytes []byte, header http.Header, webhookID string) (*VerifyWebhookResponse, error) {
 	type verifyWebhookSignatureRequest struct {
 		AuthAlgo         string          `json:"auth_algo,omitempty"`
 		CertURL          string          `json:"cert_url,omitempty"`
@@ -94,22 +109,12 @@ func (c *Client) VerifyWebhookSignature(ctx context.Context, httpReq *http.Reque
 		Event            json.RawMessage `json:"webhook_event,omitempty"`
 	}
 
-	// Read the content
-	var bodyBytes []byte
-	if httpReq.Body != nil {
-		bodyBytes, _ = io.ReadAll(httpReq.Body)
-	} else {
-		return nil, errors.New("Cannot verify webhook for HTTP Request with empty body.")
-	}
-	// Restore the io.ReadCloser to its original state
-	httpReq.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
-
 	verifyRequest := verifyWebhookSignatureRequest{
-		AuthAlgo:         httpReq.Header.Get("PAYPAL-AUTH-ALGO"),
-		CertURL:          httpReq.Header.Get("PAYPAL-CERT-URL"),
-		TransmissionID:   httpReq.Header.Get("PAYPAL-TRANSMISSION-ID"),
-		TransmissionSig:  httpReq.Header.Get("PAYPAL-TRANSMISSION-SIG"),
-		TransmissionTime: httpReq.Header.Get("PAYPAL-TRANSMISSION-TIME"),
+		AuthAlgo:         header.Get("PAYPAL-AUTH-ALGO"),
+		CertURL:          header.Get("PAYPAL-CERT-URL"),
+		TransmissionID:   header.Get("PAYPAL-TRANSMISSION-ID"),
+		TransmissionSig:  header.Get("PAYPAL-TRANSMISSION-SIG"),
+		TransmissionTime: header.Get("PAYPAL-TRANSMISSION-TIME"),
 		WebhookID:        webhookID,
 		Event:            json.RawMessage(bodyBytes),
 	}
