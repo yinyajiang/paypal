@@ -1153,14 +1153,14 @@ type (
 
 	// Refund struct
 	Refund struct {
-		ID            string     `json:"id,omitempty"`
-		Amount        *Amount    `json:"amount,omitempty"`
-		CreateTime    *time.Time `json:"create_time,omitempty"`
-		State         string     `json:"state,omitempty"`
-		CaptureID     string     `json:"capture_id,omitempty"`
-		ParentPayment string     `json:"parent_payment,omitempty"`
-		UpdateTime    *time.Time `json:"update_time,omitempty"`
-		SaleID        string     `json:"sale_id,omitempty"`
+		ID                     string                  `json:"id,omitempty"`
+		Amount                 *AmountSummaryDetail    `json:"amount,omitempty"`
+		Status                 string                  `json:"status"`
+		SellerPayableBreakdown *CaptureSellerBreakdown `json:"seller_payable_breakdown,omitempty"`
+		Payer                  *PayeeForOrders         `json:"payer,omitempty"`
+		CreateTime             *time.Time              `json:"create_time,omitempty"`
+		UpdateTime             *time.Time              `json:"update_time,omitempty"`
+		Links                  []Link                  `json:"links"`
 	}
 
 	// RefundResponse .
