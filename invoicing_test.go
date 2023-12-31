@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/plutov/paypal/v4"
 	"github.com/stretchr/testify/assert"
+	"github.com/yinyajiang/paypal/v4"
 )
 
 // All test values are defined here
