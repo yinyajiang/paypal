@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httputil"
 	"time"
@@ -67,8 +68,8 @@ func (c *Client) SetAccessToken(token string) {
 
 // SetLog will set/change the output destination.
 // If log file is set paypal will log all requests and responses to this Writer
-func (c *Client) SetLog(log io.Writer) {
-	c.Log = log
+func (c *Client) SetDbgLog(w io.Writer) {
+	c.Log = log.New(w, "", log.LstdFlags)
 }
 
 // SetReturnRepresentation enables verbose response
@@ -199,6 +200,6 @@ func (c *Client) log(r *http.Request, resp *http.Response) {
 			respDump, _ = httputil.DumpResponse(resp, true)
 		}
 
-		c.Log.Write([]byte(fmt.Sprintf("Request: %s\nResponse: %s\n", reqDump, string(respDump))))
+		c.Log.Printf("*********************************************************************\nRequest\n  ↓↓\n%s\n\nResponse\n  ↓↓\n%s\n*********************************************************************\n\n\n", reqDump, string(respDump))
 	}
 }

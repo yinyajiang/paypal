@@ -2,7 +2,7 @@ package paypal
 
 import (
 	"fmt"
-	"io"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
@@ -676,7 +676,7 @@ type (
 		ClientID             string
 		Secret               string
 		APIBase              string
-		Log                  io.Writer // If user set log file name all requests will be logged there
+		Log                  *log.Logger // If user set log file name all requests will be logged there
 		Token                *TokenResponse
 		tokenExpiresAt       time.Time
 		returnRepresentation bool
