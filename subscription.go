@@ -77,7 +77,7 @@ type (
 
 	// https://developer.paypal.com/docs/api/subscriptions/v1/#definition-plan_override
 	PlanOverride struct {
-		BillingCycles      []BillingCycleOverride       `json:"billing_cycles,omitempty"`
+		BillingCycles      []BillingCycleOverride      `json:"billing_cycles,omitempty"`
 		PaymentPreferences *PaymentPreferencesOverride `json:"payment_preferences,omitempty"`
 		Taxes              *TaxesOverride              `json:"taxes,omitempty"`
 	}
@@ -206,8 +206,8 @@ func (c *Client) SuspendSubscription(ctx context.Context, subscriptionId, reason
 // Doc: https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions_transactions
 // Endpoint: GET /v1/billing/subscriptions/{id}/transactions
 func (c *Client) GetSubscriptionTransactions(ctx context.Context, requestParams SubscriptionTransactionsParams) (*SubscriptionTransactionsResponse, error) {
-	startTime := requestParams.StartTime.Format("2006-01-02T15:04:05Z")
-	endTime := requestParams.EndTime.Format("2006-01-02T15:04:05Z")
+	startTime := requestParams.StartTime.UTC().Format("2006-01-02T15:04:05Z")
+	endTime := requestParams.EndTime.UTC().Format("2006-01-02T15:04:05Z")
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/v1/billing/subscriptions/%s/transactions?start_time=%s&end_time=%s", c.APIBase, requestParams.SubscriptionId, startTime, endTime), nil)
 	response := &SubscriptionTransactionsResponse{}
 	if err != nil {
