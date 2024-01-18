@@ -3,6 +3,7 @@ package paypal
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"io"
@@ -22,7 +23,13 @@ func NewClient(clientID string, secret string, APIBase string) (*Client, error) 
 	}
 
 	return &Client{
-		Client:   &http.Client{},
+		Client: &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: true,
+				},
+			},
+		},
 		ClientID: clientID,
 		Secret:   secret,
 		APIBase:  APIBase,
