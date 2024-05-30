@@ -89,7 +89,7 @@ func (c *Client) VerifyWebhookSignature(ctx context.Context, httpReq *http.Reque
 	if httpReq.Body != nil {
 		bodyBytes, _ = io.ReadAll(httpReq.Body)
 	} else {
-		return nil, errors.New("Cannot verify webhook for HTTP Request with empty body.")
+		return nil, errors.New("cannot verify webhook for HTTP Request with empty body")
 	}
 	// Restore the io.ReadCloser to its original state
 	httpReq.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
@@ -108,16 +108,6 @@ func (c *Client) VerifyWebhookSignature2(ctx context.Context, bodyBytes []byte, 
 		WebhookID        string          `json:"webhook_id,omitempty"`
 		Event            json.RawMessage `json:"webhook_event,omitempty"`
 	}
-
-	// Read the content
-	var bodyBytes []byte
-	if httpReq.Body != nil {
-		bodyBytes, _ = io.ReadAll(httpReq.Body)
-	} else {
-		return nil, errors.New("cannot verify webhook for HTTP Request with empty body")
-	}
-	// Restore the io.ReadCloser to its original state
-	httpReq.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 
 	verifyRequest := verifyWebhookSignatureRequest{
 		AuthAlgo:         header.Get("PAYPAL-AUTH-ALGO"),
