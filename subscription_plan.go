@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -179,15 +180,46 @@ func (c *Client) ListSubscriptionPlans(ctx context.Context, params *Subscription
 
 	if params != nil {
 		q := req.URL.Query()
-		q.Add("page", params.Page)
-		q.Add("page_size", params.PageSize)
-		q.Add("total_required", params.TotalRequired)
-		q.Add("product_id", params.ProductId)
-		q.Add("plan_ids", params.PlanIds)
+		if params.Page != "" {
+			q.Add("page", params.Page)
+		}
+		if params.PageSize != "" {
+			q.Add("page_size", params.PageSize)
+		}
+		if params.TotalRequired != "" {
+			q.Add("total_required", params.TotalRequired)
+		}
+		if params.ProductId != "" {
+			q.Add("product_id", params.ProductId)
+		}
+		if params.PlanIds != "" {
+			q.Add("plan_ids", params.PlanIds)
+		}
 		req.URL.RawQuery = q.Encode()
+		err = c.SendWithAuth(req, response)
+	} else {
+		page := 1
+		for {
+			curRsp, err := c.ListSubscriptionPlans(ctx, &SubscriptionPlanListParameters{
+				ListParams: ListParams{
+					Page:          strconv.Itoa(page),
+					TotalRequired: "true",
+				},
+			})
+			if err != nil {
+				return nil, err
+			}
+			if page == 1 {
+				response = curRsp
+			} else {
+				response.Plans = append(response.Plans, curRsp.Plans...)
+			}
+			if curRsp.TotalPages == page {
+				break
+			}
+			page++
+		}
 	}
-
-	err = c.SendWithAuth(req, response)
 	return response, err
 }
 
